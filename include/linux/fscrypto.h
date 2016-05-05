@@ -174,10 +174,7 @@ struct fscrypt_name {
  */
 struct fscrypt_operations {
 	int (*get_context)(struct inode *, void *, size_t);
-<<<<<<< HEAD
 	int (*key_prefix)(struct inode *, u8 **);
-=======
->>>>>>> bf1069c... f2fs: squashed commit from f2fs-stable
 	int (*prepare_context)(struct inode *);
 	int (*set_context)(struct inode *, const void *, size_t, void *);
 	int (*dummy_context)(struct inode *);
