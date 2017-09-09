@@ -2915,7 +2915,8 @@ static inline int l2cap_get_conf_opt(void **ptr, int *type, int *olen, unsigned 
 	return len;
 }
 
-static void l2cap_add_conf_opt(void **ptr, u8 type, u8 len, unsigned long val, size_t size)
+static void l2cap_add_conf_opt(void **ptr, u8 type, u8 len, unsigned long val,
+		size_t size)
 {
 	struct l2cap_conf_opt *opt = *ptr;
 
@@ -3348,7 +3349,7 @@ done:
 		rfc.max_pdu_size    = 0;
 
 		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-				   (unsigned long) &rfc, endptr - ptr);
+							(unsigned long) &rfc, endptr - ptr);
 		break;
 
 	case L2CAP_MODE_ERTM:
@@ -3365,12 +3366,12 @@ done:
 			rfc.max_pdu_size = cpu_to_le16(pi->imtu);
 
 		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-				   (unsigned long) &rfc, endptr - ptr);
+							(unsigned long) &rfc, endptr - ptr);
 
 		if ((pi->conn->feat_mask & L2CAP_FEAT_EXT_WINDOW) &&
 			pi->extended_control) {
 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EXT_WINDOW, 2,
-					   pi->tx_win, endptr - ptr);
+					pi->tx_win, endptr - ptr);
 		}
 
 		if (pi->amp_id) {
@@ -3402,7 +3403,7 @@ done:
 			rfc.max_pdu_size = cpu_to_le16(pi->imtu);
 
 		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-				   (unsigned long) &rfc, endptr - ptr);
+							(unsigned long) &rfc, endptr - ptr);
 
 		if ((pi->conn->feat_mask & L2CAP_FEAT_EXT_WINDOW) &&
 			pi->extended_control) {
@@ -3427,7 +3428,8 @@ done:
 }
 
 
-static int l2cap_build_amp_reconf_req(struct sock *sk, void *data, size_t data_size)
+static int l2cap_build_amp_reconf_req(struct sock *sk, void *data,
+		size_t data_size)
 {
 	struct l2cap_pinfo *pi = l2cap_pi(sk);
 	struct l2cap_conf_req *req = data;
@@ -3454,7 +3456,7 @@ static int l2cap_build_amp_reconf_req(struct sock *sk, void *data, size_t data_s
 	}
 
 	l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-			   (unsigned long) &rfc, endptr - ptr);
+						(unsigned long) &rfc, endptr - ptr);
 
 	if (pi->conn->feat_mask & L2CAP_FEAT_FCS) {
 		/* TODO assign fcs for br/edr based on socket config option */
@@ -3465,7 +3467,8 @@ static int l2cap_build_amp_reconf_req(struct sock *sk, void *data, size_t data_s
 		else
 			pi->local_conf.fcs = L2CAP_FCS_CRC16;
 
-		l2cap_add_conf_opt(&ptr, L2CAP_CONF_FCS, 1, pi->local_conf.fcs, endptr - ptr);
+		l2cap_add_conf_opt(&ptr, L2CAP_CONF_FCS, 1, pi->local_conf.fcs,
+				endptr - ptr);
 		pi->fcs = pi->local_conf.fcs | pi->remote_conf.fcs;
 	}
 
@@ -3479,8 +3482,8 @@ static int l2cap_parse_conf_req(struct sock *sk, void *data, size_t data_size)
 {
 	struct l2cap_pinfo *pi = l2cap_pi(sk);
 	struct l2cap_conf_rsp *rsp = data;
-	void *ptr = rsp->data;
 	void *endptr = data + data_size;
+	void *ptr = rsp->data;
 	void *req = pi->conf_req;
 	int len = pi->conf_len;
 	int type, hint, olen;
@@ -3603,8 +3606,7 @@ done:
 			return -ECONNREFUSED;
 
 		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
-				   sizeof(rfc), (unsigned long) &rfc,
-				   endptr - ptr);
+					sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
 	}
 
 
@@ -3695,7 +3697,8 @@ done:
 	return ptr - data;
 }
 
-static int l2cap_parse_amp_move_reconf_req(struct sock *sk, void *data, size_t data_size)
+static int l2cap_parse_amp_move_reconf_req(struct sock *sk, void *data,
+		size_t data_size)
 {
 	struct l2cap_pinfo *pi = l2cap_pi(sk);
 	struct l2cap_conf_rsp *rsp = data;
@@ -3825,7 +3828,8 @@ done:
 	return ptr - data;
 }
 
-static int l2cap_parse_conf_rsp(struct sock *sk, void *rsp, int len, void *data, size_t size, u16 *result)
+static int l2cap_parse_conf_rsp(struct sock *sk, void *rsp, int len, void *data,
+		size_t size, u16 *result)
 {
 	struct l2cap_pinfo *pi = l2cap_pi(sk);
 	struct l2cap_conf_req *req = data;
