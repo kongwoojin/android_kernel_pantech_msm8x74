@@ -4523,8 +4523,6 @@ mutex_unlock:
 	return rc;
 }
 
-#endif
-
 #ifdef CONFIG_ANDROID_INTF_ALARM_DEV
 #define POWER_STAGE_REDUCE_CHECK_PERIOD_NS      (20LL * NSEC_PER_SEC)
 #else

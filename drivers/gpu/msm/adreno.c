@@ -356,7 +356,8 @@ static const struct input_device_id adreno_input_ids[] = {
 		/* assumption: MT_.._X & MT_.._Y are in the same long */
 		.absbit = { [BIT_WORD(ABS_MT_POSITION_X)] =
 				BIT_MASK(ABS_MT_POSITION_X) |
-				BIT_MASK(ABS_MT_POSITION_Y) },
+				BIT_MASK(ABS_MT_POSITION_Y) |
+				BIT_MASK(ABS_MT_TRACKING_ID) },
 	},
 	{ },
 };
@@ -1735,7 +1736,7 @@ static int adreno_of_get_pdata(struct platform_device *pdev)
 
 	if (adreno_of_read_property(pdev->dev.of_node, "qcom,idle-timeout",
 		&pdata->idle_timeout))
-		pdata->idle_timeout = HZ/12;
+		pdata->idle_timeout = 80;
 
 	pdata->strtstp_sleepwake = of_property_read_bool(pdev->dev.of_node,
 						"qcom,strtstp-sleepwake");

@@ -395,8 +395,7 @@ pipe_read(struct kiocb *iocb, const struct iovec *_iov,
 			const struct pipe_buf_operations *ops = buf->ops;
 			void *addr;
 			size_t chars = buf->len, remaining;
-			int error, atomic;
-			int offset;
+			int error, atomic, offset;
 
 			if (chars > total_len)
 				chars = total_len;
@@ -672,11 +671,8 @@ out:
 		wake_up_interruptible_sync_poll(&pipe->wait, POLLIN | POLLRDNORM);
 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
 	}
-	if (ret > 0) {
-		int err = file_update_time(filp);
-		if (err)
-			ret = err;
-	}
+	if (ret > 0)
+		file_update_time(filp);
 	return ret;
 }
 

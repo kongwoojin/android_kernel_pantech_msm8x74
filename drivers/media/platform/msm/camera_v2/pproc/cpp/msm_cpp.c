@@ -1595,9 +1595,8 @@ long msm_cpp_subdev_ioctl(struct v4l2_subdev *sd,
 	case VIDIOC_MSM_CPP_DEQUEUE_STREAM_BUFF_INFO: {
 		uint32_t identity;
 		struct msm_cpp_buff_queue_info_t *buff_queue_info;
-		CPP_DBG("VIDIOC_MSM_CPP_DEQUEUE_STREAM_BUFF_INFO\n");
-		if (ioctl_ptr->len != sizeof(uint32_t)) {
-			mutex_unlock(&cpp_dev->mutex);
+		if ((ioctl_ptr->len == 0) ||
+		    (ioctl_ptr->len > sizeof(uint32_t)))
 			return -EINVAL;
 
 		rc = (copy_from_user(&identity,

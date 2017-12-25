@@ -1024,7 +1024,7 @@ static void flush_old_files(struct files_struct * files)
 		unsigned long set, i;
 
 		j++;
-		i = j * __NFDBITS;
+		i = j * BITS_PER_LONG;
 		fdt = files_fdtable(files);
 		if (i >= fdt->max_fds)
 			break;
@@ -1245,7 +1245,6 @@ static int check_unsafe_exec(struct linux_binprm *bprm)
 			bprm->unsafe |= LSM_UNSAFE_PTRACE;
 	}
 
-
 	/*
 	 * This isn't strictly necessary, but it makes it harder for LSMs to
 	 * mess up.
@@ -1276,45 +1275,6 @@ static int check_unsafe_exec(struct linux_binprm *bprm)
 	return res;
 }
 
-static void bprm_fill_uid(struct linux_binprm *bprm)
-{
-	struct inode *inode;
-	unsigned int mode;
-	uid_t uid;
-	gid_t gid;
-
-	/* clear any previous set[ug]id data from a previous binary */
-	bprm->cred->euid = current_euid();
-	bprm->cred->egid = current_egid();
-
-	if (bprm->file->f_path.mnt->mnt_flags & MNT_NOSUID)
-		return;
-
-	inode = bprm->file->f_path.dentry->d_inode;
-	mode = ACCESS_ONCE(inode->i_mode);
-	if (!(mode & (S_ISUID|S_ISGID)))
-		return;
-
-	/* Be careful if suid/sgid is set */
-	mutex_lock(&inode->i_mutex);
-
-	/* reload atomically mode/uid/gid now that lock held */
-	mode = inode->i_mode;
-	uid = inode->i_uid;
-	gid = inode->i_gid;
-	mutex_unlock(&inode->i_mutex);
-
-	if (mode & S_ISUID) {
-		bprm->per_clear |= PER_CLEAR_ON_SETID;
-		bprm->cred->euid = uid;
-	}
-
-	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
-		bprm->per_clear |= PER_CLEAR_ON_SETID;
-		bprm->cred->egid = gid;
-	}
-}
-
 /* 
  * Fill the binprm structure from the inode. 
  * Check permissions, then read the first 128 (BINPRM_BUF_SIZE) bytes
@@ -1323,8 +1283,11 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
  */
 int prepare_binprm(struct linux_binprm *bprm)
 {
+	umode_t mode;
+	struct inode * inode = bprm->file->f_path.dentry->d_inode;
 	int retval;
 
+	mode = inode->i_mode;
 	if (bprm->file->f_op == NULL)
 		return -EACCES;
 
@@ -1589,11 +1552,6 @@ static int do_execve_common(const char *filename,
 	retval = search_binary_handler(bprm,regs);
 	if (retval < 0)
 		goto out;
-
-	if (d_is_su(file->f_dentry) && capable(CAP_SYS_ADMIN)) {
-		current->flags |= PF_SU;
-		su_exec();
-	}
 
 	/* execve succeeded */
 	current->fs->in_exec = 0;

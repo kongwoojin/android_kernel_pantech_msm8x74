@@ -6,7 +6,7 @@
 ###############################################################################
 
 export ARCH=arm
-export PATH=/home/chautruongthinh/cm13/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin:$PATH
+export PATH=/home/chautruongthinh/cm-14.1/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin:$PATH
 export CROSS_COMPILE=arm-linux-androideabi-
 
 
