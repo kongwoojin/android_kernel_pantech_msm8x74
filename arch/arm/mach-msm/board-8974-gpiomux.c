@@ -1082,7 +1082,7 @@ static struct msm_gpiomux_config msm_epm_configs[] __initdata = {
 	},
 #endif	
 
-#if !defined(CONFIG_TOUCHSCREEN_FTS)
+#if !defined(CONFIG_TOUCHSCREEN_FTS) && !defined(CONFIG_PANTECH_CAMERA_EF65_SS)
 	{
 		.gpio      = 96,		/* EPM MARKER1 */
 		.settings = {
@@ -1261,7 +1261,6 @@ static struct gpiomux_setting gpio_sc_i2c_scl_susp_cfg = {	// GPIO_84
 	.dir = GPIOMUX_OUT_HIGH,
 };
 #endif
-#if defined(CONFIG_KS8851) || defined(CONFIG_KS8851_MODULE)
 #if defined(CONFIG_MACH_MSM8974_EF63S) || defined(CONFIG_MACH_MSM8974_EF63K) || defined(CONFIG_MACH_MSM8974_EF63L)
 static struct gpiomux_setting pan_tm_key_active_config = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -1275,7 +1274,6 @@ static struct gpiomux_setting pan_tm_key_sus_config = {
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
-#endif
 #endif
 
 static struct msm_gpiomux_config msm_blsp_configs[] __initdata = {
@@ -1845,7 +1843,7 @@ static struct msm_gpiomux_config msm_sensor_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_suspend_config[1],
 		},
 	},
-#if !defined(CONFIG_TOUCHSCREEN_FTS)
+#if !defined(CONFIG_TOUCHSCREEN_FTS) && !defined(CONFIG_PANTECH_CAMERA_EF65_SS)
 	{
 		.gpio = 96, /* REAR WP */
 		.settings = {
@@ -2740,7 +2738,7 @@ static struct msm_gpiomux_config msm8974_sdc4_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &sdc4_data_1_suspend_cfg,
 		},
 	},
-#if !defined(CONFIG_TOUCHSCREEN_FTS)
+#if !defined(CONFIG_TOUCHSCREEN_FTS) && !defined(CONFIG_PANTECH_CAMERA_EF65_SS)
 	{
 		/* DAT0 */
 		.gpio      = 96,
